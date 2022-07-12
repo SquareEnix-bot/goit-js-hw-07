@@ -3,7 +3,6 @@ import { galleryItems } from './gallery-items.js';
 // * головний div.gallery 
 const gallery = document.querySelector('.gallery');
 
-// ! ---begin--- спосіб №1 ШАБЛОННІ РЯДКИ
 // * функція створення розмітки
 function createImageMarkup({ preview, original, description }) {
   return `<div class="gallery__item">
@@ -25,44 +24,10 @@ const createGalleryMarkup = galleryItems
   .join('');
 
 // * додається розмітка галереї на сторінку в головний div.gallery
-// gallery.insertAdjacentHTML("beforeend", createGalleryMarkup);
-// ! ---end--- спосіб №1 ШАБЛОННІ РЯДКИ
-
-// ! ---begin--- спосіб №2 СТВОРЕННЯ ЧЕРЕЗ createElement
-// * функція створення елементу
-function createImageElement({ preview, original, description }) {
-  const galleryItem = document.createElement('div'); // * div
-  galleryItem.classList.add('gallery__item');
-  const galleryLink = document.createElement('a'); // * a
-  galleryLink.classList.add('gallery__link');
-  galleryLink.href = `${original}`;
-  const galleryImage = document.createElement('img'); // * img
-  galleryImage.classList.add('gallery__image');
-  galleryImage.src = `${preview}`;
-  galleryImage.dataset.source = `${original}`;
-  galleryImage.alt = `${description}`;  
-
-  galleryLink.append(galleryImage); // * img -> a 
-  galleryItem.append(galleryLink); // * a -> div
-  galleryArray.push(galleryItem);
-}
-
-const galleryArray = []; // * масив для galleryItem
-
-// * створюються всі елементи та пушаться у масив
-const createGallery = galleryItems
-  .map(createImageElement);
-
-// * додаю масив з усіма galleryItem в DOM
-gallery.append(...galleryArray);
-// ! ---end--- спосіб №2 СТВОРЕННЯ ЧЕРЕЗ createElement
-
-// * вибір картинки
-const image = gallery.querySelectorAll('.gallery__item');
+gallery.insertAdjacentHTML("beforeend", createGalleryMarkup);
 
 // * слухач на головний div.gallery
 gallery.addEventListener('click', onImgClick);
-let selectedImageLink = null;
 
 // * делегування кліку на div.gallery__item 
 function onImgClick(event) {
@@ -71,10 +36,7 @@ function onImgClick(event) {
     return;
   }    
 
-  const activeImage = event.target;
-  selectedImageLink = activeImage.dataset.source;  // * link на оригінальне зображення  
-
-  bigImage(selectedImageLink); // * виклик функції basicLightbox
+  bigImage(event.target.dataset.source); // * виклик функції basicLightbox
 };
 
 // * basicLightbox
